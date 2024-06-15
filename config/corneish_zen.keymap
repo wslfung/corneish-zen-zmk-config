@@ -21,11 +21,16 @@
 
 / {
     behaviors {
-        td0: td0 {
-            compatible = "zmk,behavior-tap-dance";
-            label = "TD0";
-            #binding-cells = <0>;
-            bindings = <&kp LEFT_SHIFT>, <&kp CAPS>;
+        tpmt: tpmt {
+            compatible = "zmk,behavior-hold-tap";
+            label = "TPMT";
+            bindings = <&kp>, <&kp>;
+
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <200>;
+            require-prior-idle-ms = <125>;
+            quick-tap-ms = <125>;
         };
     };
 
@@ -42,15 +47,15 @@
             //                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
 
             bindings = <
-&kp TAB    &kp Q  &kp W  &kp E     &kp R  &kp T          &kp Y        &kp U  &kp I      &kp O    &kp P     &kp BSPC
-&kp LCTRL  &kp A  &kp S  &kp D     &kp F  &kp G          &kp H        &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
-&td0       &kp Z  &kp X  &kp C     &kp V  &kp B          &kp N        &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
-                         &kp LGUI  &mo 1  &lt 3 SPACE    &lt 3 ENTER  &mo 2  &kp RALT
+&kp TAB        &kp Q          &kp W             &kp E         &kp R           &kp T                          &kp Y    &kp U          &kp I          &kp O         &kp P                  &kp BACKSLASH
+&kp BACKSPACE  &tpmt LCTRL A  &tpmt LEFT_ALT S  &tpmt LGUI D  &tpmt LSHIFT F  &kp G                          &kp H    &tpmt RSHFT J  &tpmt RGUI K   &tpmt RALT L  &tpmt RCTRL SEMICOLON  &kp SQT
+&kp LSHFT      &kp Z          &kp X             &kp C         &kp V           &kp B                          &kp N    &kp M          &kp COMMA      &kp DOT       &kp FSLH               &kp RSHFT
+                                                                    &kp ENTER  &mo 1  &mo 2    &mo 1  &kp SPACE  &kp DEL
             >;
         };
 
         lower_layer {
-            display-name = "NUMBER";
+            display-name = "NAV";
 
             // -----------------------------------------------------------------------------------------
             // |  TAB |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  | BKSP |
@@ -59,15 +64,15 @@
             //                    | GUI |     | SPC |   | ENT |     | ALT |
 
             bindings = <
-&trans  &kp N1           &kp N2          &kp N3             &kp N4            &kp N5             &kp N6           &kp N7           &kp N8           &kp N9           &kp N0    &kp BSPC
-&trans  &bt BT_CLR_ALL   &bt BT_SEL 0    &bt BT_SEL 1       &bt BT_SEL 2      &bt BT_SEL 3       &kp LEFT         &kp DOWN         &kp UP           &kp RIGHT        &kp HOME  &kp PG_UP
-&trans  &rgb_ug RGB_OFF  &rgb_ug RGB_ON  &ext_power EP_OFF  &ext_power EP_ON  &rgb_ug RGB_EFF    &rgb_ug RGB_EFR  &rgb_ug RGB_SPI  &rgb_ug RGB_BRI  &rgb_ug RGB_BRD  &kp END   &kp PG_DN
-                                         &trans             &trans            &trans             &kp INS          &kp DEL          &trans
+&kp ESC  &kp GRAVE  &trans  &trans  &kp PRINTSCREEN  &trans                    &kp INS  &kp HOME   &kp UP    &kp END    &kp PG_UP  &trans
+&trans   &trans     &trans  &trans  &trans           &trans                    &kp DEL  &kp LEFT   &kp DOWN  &kp RIGHT  &kp PG_DN  &kp RGUI
+&trans   &trans     &trans  &trans  &trans           &trans                    &trans   &kp EQUAL  &kp LBKT  &kp RBKT   &trans     &trans
+                      &trans             &trans            &trans             &trans          &trans          &trans
             >;
         };
 
         raise_layer {
-            display-name = "SYMBOL";
+            display-name = "NUM";
 
             // -----------------------------------------------------------------------------------------
             // |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BKSP |
@@ -76,21 +81,31 @@
             //                    | GUI |     | SPC |   | ENT |     | ALT |
 
             bindings = <
-&trans  &kp EXCL      &kp AT        &kp HASH  &kp DLLR  &kp PRCNT    &kp CARET  &kp AMPS   &kp ASTRK  &kp LPAR  &kp RPAR  &kp BSPC
-&trans  &none         &none         &none     &none     &none        &kp MINUS  &kp EQUAL  &kp LBKT   &kp RBKT  &kp BSLH  &kp GRAVE
-&trans  &out OUT_USB  &out OUT_BLE  &none     &none     &none        &kp UNDER  &kp PLUS   &kp LBRC   &kp RBRC  &kp PIPE  &kp TILDE
-                                    &trans    &trans    &kp SPACE    &kp RET    &trans     &trans
+&trans  &trans  &trans  &trans  &trans  &trans                       &trans      &kp N7  &kp N8     &kp N9  &trans       &trans
+&trans  &trans  &trans  &trans  &trans  &trans                       &trans      &kp N4  &kp N5     &kp N6  &kp KP_PLUS  &kp KP_EQUAL
+&trans  &trans  &trans  &trans  &trans  &trans                       &trans      &kp N1  &kp N2     &kp N3  &kp SLASH    &trans
+                                    &trans    &trans    &trans    &trans    &kp N0     &kp KP_DOT
             >;
         };
 
-        layer_3 {
+        sys_layer {
             display-name = "Fn";
             bindings = <
-&trans  &kp F1  &kp F2  &kp F3  &kp F4      &kp F5         &kp F6       &kp F7  &kp F8  &kp F9  &kp F10          &kp F11
-&trans  &trans  &trans  &trans  &sys_reset  &bootloader    &bootloader  &trans  &trans  &trans  &kp PRINTSCREEN  &kp F12
-&trans  &trans  &trans  &trans  &trans      &trans         &trans       &trans  &trans  &trans  &kp SCROLLLOCK   &kp PAUSE_BREAK
-                        &trans  &trans      &trans         &trans       &trans  &trans
+&bt BT_CLR   &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3   &bt BT_SEL 4                    &kp CAPS  &kp KP_NUMLOCK  &kp SCROLLLOCK   &trans   &trans    &out OUT_TOG
+&trans       &trans        &trans        &trans        &trans         &trans                          &trans    &trans          &trans           &trans   &trans    &trans
+&kp F1       &kp F2        &kp F3        &kp F4        &kp F5         &kp F6                          &kp F7    &kp F8          &kp F9           &kp F10  &kp F11   &kp F12
+                                                          &trans  &trans      &trans         &trans       &trans  &trans
             >;
         };
     };
+
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+
+        adjust_layer {
+            if-layers = <1 2>;
+            then-layer = <3>;
+        };
+    };
+
 };
